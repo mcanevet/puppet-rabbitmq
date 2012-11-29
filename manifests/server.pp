@@ -17,7 +17,7 @@
 #  [*cluster_disk_nodes*] - which nodes to cluster with (including the current one)
 #  [*erlang_cookie*] - erlang cookie, must be the same for all nodes in a cluster
 #  [*wipe_db_on_cookie_change*] - whether to wipe the RabbitMQ data if the specified
-#    erlang_cookie differs from the current one. This is a sad parameter: actually, 
+#    erlang_cookie differs from the current one. This is a sad parameter: actually,
 #    if the cookie indeed differs, then wiping the database is the *only* thing you
 #    can do. You're only required to set this parameter to true as a sign that you
 #    realise this.
@@ -28,6 +28,7 @@
 #  [*ssl_cacert*] - the CA certificate for SSL connections
 #  [*ssl_cert*] - the certificate for SSL connections
 #  [*ssl_key*] - the private key for SSL connections
+#  [*ssl_stomp_port*] - ssl port stomp should be listening on
 # Requires:
 #  stdlib
 # Sample Usage:
@@ -59,11 +60,13 @@ class rabbitmq::server(
   $ssl_cacert='',
   $ssl_cert='',
   $ssl_key='',
+  $ssl_stomp_port='6164',
 ) {
 
   validate_bool($delete_guest_user, $config_stomp)
   validate_re($port, '\d+')
   validate_re($stomp_port, '\d+')
+  validate_re($ssl_stomp_port, '\d+')
 
   if $version == 'UNSET' {
     $version_real = '2.4.1'
@@ -91,6 +94,14 @@ class rabbitmq::server(
   }
 
   file { '/etc/rabbitmq':
+    ensure  => directory,
+    owner   => '0',
+    group   => '0',
+    mode    => '0644',
+    require => Package[$package_name],
+  }
+
+  file { '/etc/rabbitmq/ssl':
     ensure  => directory,
     owner   => '0',
     group   => '0',
