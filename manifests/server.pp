@@ -21,11 +21,18 @@
 #    if the cookie indeed differs, then wiping the database is the *only* thing you
 #    can do. You're only required to set this parameter to true as a sign that you
 #    realise this.
+#  [*default_user*] - The default user name
+#  [*default_pass*] - The default password
+#  [*ssl*] - whether to use SSL
+#  [*ssl_port*] - the port used for SSL connections
+#  [*ssl_cacert*] - the CA certificate for SSL connections
+#  [*ssl_cert*] - the certificate for SSL connections
+#  [*ssl_key*] - the private key for SSL connections
 # Requires:
 #  stdlib
 # Sample Usage:
 #
-#  
+#
 #
 #
 # [Remember: No empty lines between comments and class definition]
@@ -44,7 +51,14 @@ class rabbitmq::server(
   $config='UNSET',
   $env_config='UNSET',
   $erlang_cookie='EOKOWXQREETZSHFNTPEY',
-  $wipe_db_on_cookie_change=false
+  $wipe_db_on_cookie_change=false,
+  $default_user='guest',
+  $default_pass='guest',
+  $ssl=false,
+  $ssl_port='5671',
+  $ssl_cacert='',
+  $ssl_cert='',
+  $ssl_key='',
 ) {
 
   validate_bool($delete_guest_user, $config_stomp)
