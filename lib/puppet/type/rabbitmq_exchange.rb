@@ -26,4 +26,8 @@ Puppet::Type.newtype(:rabbitmq_exchange) do
     end
   end
 
+  autorequire(:rabbitmq_vhost) do
+    [self[:name].split('@')[1]]
+  end
+
 end
