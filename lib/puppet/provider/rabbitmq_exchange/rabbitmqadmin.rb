@@ -45,17 +45,15 @@ Puppet::Type.type(:rabbitmq_exchange).provide(:rabbitmqadmin) do
 
   def create
     vhost_opt = should_vhost ? "--vhost=#{should_vhost}" : ''
-    credentials = "-u #{resource[:user]} -p #{resource[:password]}"
     name = resource[:name].split('@')[0]
-    rabbitmqadmin('declare', 'exchange', credentials, vhost_opt, "name=#{name}", "type=#{resource[:type]}")
+    rabbitmqadmin('declare', 'exchange', vhost_opt, "name=#{name}", "type=#{resource[:type]}")
     @property_hash[:ensure] = :present
   end
 
   def destroy
     vhost_opt = should_vhost ? "--vhost=#{should_vhost}" : ''
-    credentials = "-u #{resource[:user]} -p #{resource[:password]}"
     name = resource[:name].split('@')[0]
-    rabbitmqadmin('delete', 'exchange', credentials, vhost_opt, "name=#{name}")
+    rabbitmqadmin('delete', 'exchange', vhost_opt, "name=#{name}")
     @property_hash[:ensure] = :absent
   end
 
